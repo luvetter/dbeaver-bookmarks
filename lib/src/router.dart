@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import 'common/shell/shell.dart';
 import 'feature/connections/routes.dart' as connections;
 import 'feature/settings/routes.dart' as settings;
-import 'shell.dart';
 
 export 'feature/connections/routes.dart'
     show ConnectionsRoute, $ConnectionsRouteExtension;
@@ -18,7 +18,7 @@ final router = GoRouter(
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
-        return Shell(title: 'DBeaver Bookmarks', child: child);
+        return Shell(child: child);
       },
       routes: _appRoutes,
     )
@@ -26,6 +26,7 @@ final router = GoRouter(
 );
 
 final _appRoutes = [
+  GoRoute(path: '/', builder: (context, state) => const SizedBox.shrink()),
   ...connections.$appRoutes,
   ...settings.$appRoutes,
 ];
