@@ -4,20 +4,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'app.dart';
-import 'routes.dart';
+import 'common/provider/theme.dart';
+import 'router.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title, required this.child});
+class Shell extends StatefulWidget {
+  const Shell({super.key, required this.title, required this.child});
 
   final String title;
   final Widget child;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Shell> createState() => _ShellState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _ShellState extends State<Shell> {
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     if (location == const SettingsRoute().location) {
@@ -71,12 +71,12 @@ class _MyHomePageState extends State<MyHomePage> {
         selected: _calculateSelectedIndex(context),
         items: [
           PaneItem(
-            key: Key(const HomeRoute().location),
+            key: Key(const ConnectionsRoute().location),
             icon: const Icon(FluentIcons.home),
             title: const Text('Home'),
             body: const SizedBox.shrink(),
             onTap: () {
-              const HomeRoute().go(context);
+              const ConnectionsRoute().go(context);
             },
           ),
           PaneItem(

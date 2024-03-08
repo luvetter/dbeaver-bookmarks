@@ -1,10 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'routes.dart';
-
-part 'app.g.dart';
+import 'common/provider/theme.dart';
+import 'router.dart';
 
 class DbeaverBookmarks extends ConsumerWidget {
   const DbeaverBookmarks({super.key});
@@ -18,23 +16,5 @@ class DbeaverBookmarks extends ConsumerWidget {
       routeInformationProvider: router.routeInformationProvider,
       theme: ref.watch(fluentThemeProvider),
     );
-  }
-}
-
-final fluentThemeProvider = fluentThemeNotifierProvider;
-
-@riverpod
-class FluentThemeNotifier extends _$FluentThemeNotifier {
-  @override
-  FluentThemeData build() {
-    return FluentThemeData.light();
-  }
-
-  void toggle() {
-    if (state.brightness == Brightness.light) {
-      state = state.copyWith(brightness: Brightness.dark);
-    } else {
-      state = state.copyWith(brightness: Brightness.light);
-    }
   }
 }
