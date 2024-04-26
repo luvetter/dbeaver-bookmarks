@@ -14,7 +14,9 @@ class DbeaverBookmarks extends ConsumerWidget {
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
       routeInformationProvider: router.routeInformationProvider,
-      theme: ref.watch(fluentThemeProvider),
+      themeMode: ref.watch(themeModeProvider),
+      theme: FluentThemeData.light(),
+      darkTheme: FluentThemeData.dark(),
     );
   }
 }

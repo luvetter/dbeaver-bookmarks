@@ -3,20 +3,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'theme.g.dart';
 
-final fluentThemeProvider = fluentThemeNotifierProvider;
+final themeModeProvider = themeModeNotifierProvider;
 
 @riverpod
-class FluentThemeNotifier extends _$FluentThemeNotifier {
+class ThemeModeNotifier extends _$ThemeModeNotifier {
   @override
-  FluentThemeData build() {
-    return FluentThemeData.light();
+  ThemeMode build() {
+    return ThemeMode.system;
   }
 
-  void toggle() {
-    if (state.brightness == Brightness.light) {
-      state = state.copyWith(brightness: Brightness.dark);
-    } else {
-      state = state.copyWith(brightness: Brightness.light);
-    }
+  void change(ThemeMode mode) {
+    state = mode;
   }
 }

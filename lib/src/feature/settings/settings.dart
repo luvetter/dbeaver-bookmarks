@@ -1,5 +1,5 @@
+import 'package:dbeaver_bookmarks/src/common/provider/theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SettingsPage extends HookConsumerWidget {
@@ -7,20 +7,39 @@ class SettingsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var index = useState(0);
+    const spacer = SizedBox(height: 10.0);
+    const biggerSpacer = SizedBox(height: 40.0);
+    final themeMode = ref.watch(themeModeProvider);
+
     return ScaffoldPage.scrollable(
+      header: const PageHeader(title: Text('Einstellungen')),
       children: [
-        const Text('Some Settings here...'),
-        for (var i = 0; i < 10; i++)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+        Text('App-Modus', style: FluentTheme.of(context).typography.subtitle),
+        spacer,
+        ...[ThemeMode.light, ThemeMode.dark, ThemeMode.system].map(
+          (mode) => Padding(
+            padding: const EdgeInsetsDirectional.only(bottom: 8.0),
             child: RadioButton(
-              checked: index.value == i,
-              onChanged: (value) => index.value = i,
-              content: Text('Option $i'),
+              checked: mode == themeMode,
+              onChanged: (value) {
+                if (value) {
+                  ref.read(themeModeProvider.notifier).change(mode);
+                }
+              },
+              content: Text(mode.name),
             ),
           ),
+        ),
+        biggerSpacer,
       ],
     );
   }
+}
+
+extension _ThemeModeExt on ThemeMode {
+  String get name => switch (this) {
+        ThemeMode.light => 'Hell',
+        ThemeMode.dark => 'Dunkel',
+        ThemeMode.system => 'System',
+      };
 }

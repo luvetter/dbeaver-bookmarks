@@ -1,3 +1,4 @@
+import 'package:dbeaver_bookmarks/src/common/provider/workspace.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../router.dart';
-import '../provider/theme.dart';
 
 class Shell extends StatelessWidget {
   const Shell({
@@ -42,9 +42,7 @@ class Shell extends StatelessWidget {
             icon: const Icon(FluentIcons.home),
             title: const Text('Connections'),
             body: const SizedBox.shrink(),
-            onTap: () {
-              const ConnectionsRoute().go(context);
-            },
+            onTap: () => const ConnectionsRoute().go(context),
           ),
         ],
         footerItems: [
@@ -53,9 +51,7 @@ class Shell extends StatelessWidget {
             icon: const Icon(FluentIcons.settings),
             title: const Text('Settings'),
             body: const SizedBox.shrink(),
-            onTap: () {
-              const SettingsRoute().go(context);
-            },
+            onTap: () => const SettingsRoute().go(context),
           ),
         ],
       ),
@@ -70,27 +66,10 @@ class AppActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Align(
-          alignment: AlignmentDirectional.centerEnd,
-          child: Padding(
-            padding: const EdgeInsetsDirectional.only(end: 8.0),
-            child: Consumer(
-              builder: (context, ref, child) {
-                return ToggleSwitch(
-                  content: const Text('Dark Mode'),
-                  checked: FluentTheme.of(context).brightness.isDark,
-                  onChanged: (v) {
-                    ref.read(fluentThemeProvider.notifier).toggle();
-                  },
-                );
-              },
-            ),
-          ),
-        ),
-        if (!kIsWeb) const WindowButtons(),
+        if (!kIsWeb) WindowButtons(),
       ],
     );
   }
