@@ -75,16 +75,16 @@ class AppActions extends StatelessWidget {
   }
 }
 
-class AppTitle extends StatelessWidget {
+class AppTitle extends ConsumerWidget {
   const AppTitle({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    var title = const Align(
+  Widget build(BuildContext context, WidgetRef ref) {
+    var title = Align(
       alignment: AlignmentDirectional.centerStart,
-      child: Text('DBeaver Bookmarks'),
+      child: Text('DBeaver Bookmarks: ${ref.watch(workspaceProvider).path}'),
     );
     if (kIsWeb) return title;
     return DragToMoveArea(
