@@ -1,0 +1,30 @@
+name: dbeaver_bookmarks
+packages:
+  - '.'
+
+command:
+  version:
+    fetchTags: true
+    linkToCommits: true
+    workspaceChangelog: false # We don't need a workspace changelog for a single package repo
+
+scripts:
+  format: flutter format --set-exit-if-changed -n .
+  pub:get: flutter pub get
+  pub:upgrade: flutter pub upgrade
+  pub:upgrade:major: flutter pub upgrade --major-versions
+  clean: flutter clean
+  analyze: flutter analyze .
+  test:
+    run: flutter test -r expanded --no-pub # "melos run test --no-select" um alle auszuführen
+    description: Run `flutter test` for a specific package.
+    packageFilters:
+      dirExists:
+        - test
+  test:goldens:update:
+    run: flutter test -r expanded --no-pub --tags golden --update-goldens
+    packageFilters:
+      dependsOn:
+        - alchemist
+      dirExists:
+        - test
