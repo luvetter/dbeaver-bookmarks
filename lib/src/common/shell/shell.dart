@@ -1,4 +1,4 @@
-import 'package:dbeaver_bookmarks/src/common/provider/workspace.dart';
+import 'package:dbeaver_bookmarks/src/common/provider/workspace_directory.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,7 +84,8 @@ class AppTitle extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var title = Align(
       alignment: AlignmentDirectional.centerStart,
-      child: Text('DBeaver Bookmarks: ${ref.watch(workspaceProvider).path}'),
+      child: Text(
+          'DBeaver Bookmarks: ${ref.watch(workspaceDirectoryProvider).path}'),
     );
     if (kIsWeb) return title;
     return DragToMoveArea(

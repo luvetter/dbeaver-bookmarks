@@ -1,9 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:dbeaver_bookmarks/src/common/provider/workspace.dart';
+import 'package:dbeaver_bookmarks/src/feature/connections/data/project_repository.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../data/workspace_repository.dart';
+import '../domain/connection_configuration.dart';
+import '../domain/project.dart';
+import 'editor.dart';
 
 class ConnectionsPage extends HookConsumerWidget {
   const ConnectionsPage({super.key});
@@ -22,13 +26,12 @@ class ConnectionsPage extends HookConsumerWidget {
 }
 
 class _ConfigFileBreadcrumbBar extends ConsumerWidget {
-  const _ConfigFileBreadcrumbBar({super.key});
+  const _ConfigFileBreadcrumbBar();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var workspaceDirectory = ref.watch(workspaceProvider);
-    var configFile = ref.watch(currentConfigFileProvider);
-    var path = configFile?.path ?? workspaceDirectory.path;
+    var workspace = ref.watch(workspaceProvider);
+    var path = workspace.directory.path;
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
@@ -47,7 +50,7 @@ class _ConfigFileBreadcrumbBar extends ConsumerWidget {
 }
 
 class _Workspace extends StatelessWidget {
-  const _Workspace({super.key});
+  const _Workspace();
 
   @override
   Widget build(BuildContext context) {
@@ -59,47 +62,29 @@ class _Workspace extends StatelessWidget {
           child: _WorkspaceTree(),
         ),
         Expanded(
-          child: _ConfigFileEditor(),
+          child: Editor(),
         ),
       ],
     );
   }
 }
 
-class _ConfigFileEditor extends ConsumerWidget {
-  const _ConfigFileEditor({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var configFile = ref.watch(currentConfigFileProvider);
-    const jsonEncoder = JsonEncoder.withIndent('  ');
-    return configFile == null
-        ? const Center(child: Text('No config file selected'))
-        : SingleChildScrollView(
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                jsonEncoder.convert(json.decode(configFile.content)),
-              ),
-            ),
-          );
-  }
-}
-
 class _WorkspaceTree extends ConsumerWidget {
-  const _WorkspaceTree({super.key});
+  const _WorkspaceTree();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var workspaceDirectory = ref.watch(workspaceProvider);
+    var projects = ref.watch(projectsProvider);
 
     return TreeView(
       items: [
-        ...workspaceDirectory.projects.map(_buildTreeViewItem),
+        ...projects.map(_buildTreeViewItem),
       ],
       onItemInvoked: (item, _) {
-        if (item.value is ConfigFile) {
-          ref.read(currentConfigFileProvider.notifier).change(item.value);
+        if (item.value is ConnectionConfiguration) {
+          ref
+              .read(currentConnectionConfigurationProvider.notifier)
+              .change(item.value);
         }
         return Future.value();
       },
@@ -111,10 +96,10 @@ class _WorkspaceTree extends ConsumerWidget {
       value: project,
       content: Text(project.name),
       children: [
-        ...project.configFiles.map(
-          (file) => TreeViewItem(
-            value: file,
-            content: Text(file.path.split(Platform.pathSeparator).last),
+        ...project.configurations.map(
+          (configuration) => TreeViewItem(
+            value: configuration,
+            content: Text(configuration.name),
           ),
         ),
       ],

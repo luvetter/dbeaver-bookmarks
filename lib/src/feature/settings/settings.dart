@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../common/provider/workspace.dart';
+import '../../common/provider/workspace_directory.dart';
 
 const _spacer = SizedBox(height: 10.0);
 
@@ -32,7 +32,7 @@ class _Workspace extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var currentPath = ref.watch(workspaceProvider).path;
+    var currentPath = ref.watch(workspaceDirectoryProvider).path;
     return _SettingsTile(
       title: 'Arbeitsbereich',
       children: [
@@ -43,7 +43,7 @@ class _Workspace extends ConsumerWidget {
             onPressed: () async {
               final path = await showOpenPanel(currentPath);
               if (path != null) {
-                ref.read(workspaceProvider.notifier).change(path);
+                ref.read(workspaceDirectoryProvider.notifier).change(path);
               }
             },
             child: const Text('Ändern'),

@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'common/provider/theme.dart';
-import 'common/provider/workspace.dart';
+import 'common/provider/workspace_directory.dart';
 import 'router.dart';
 
 class DbeaverBookmarks extends HookConsumerWidget {
@@ -36,7 +36,8 @@ class DbeaverBookmarks extends HookConsumerWidget {
         .then((directory) => directory.absolute.path)
         .onError(_logError)
         .then((path) => Uri.directory(path, windows: true))
-        .then((uri) => ref.read(workspaceProvider.notifier).change(uri));
+        .then(
+            (uri) => ref.read(workspaceDirectoryProvider.notifier).change(uri));
   }
 
   String _logError(Object error, StackTrace stackTrace) {

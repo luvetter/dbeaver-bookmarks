@@ -1,4 +1,4 @@
-import 'package:dbeaver_bookmarks/src/feature/connections/connections.dart';
+import 'package:dbeaver_bookmarks/src/feature/connections/presentation/connections.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
