@@ -8,7 +8,9 @@ part 'connection_configuration.g.dart';
 @freezed
 class ConnectionConfiguration with _$ConnectionConfiguration {
   factory ConnectionConfiguration({
+    required String id,
     required String name,
+    required String project,
     @Default([]) List<Connection> connections,
   }) = _ConnectionConfiguration;
 

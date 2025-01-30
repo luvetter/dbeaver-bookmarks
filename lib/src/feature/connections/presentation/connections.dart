@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:dbeaver_bookmarks/src/common/context_menu.dart';
 import 'package:dbeaver_bookmarks/src/common/provider/workspace_directory.dart';
-import 'package:dbeaver_bookmarks/src/feature/connections/application/projects_manager.dart';
-import 'package:dbeaver_bookmarks/src/feature/connections/presentation/new_project_dialog.dart';
+import 'package:dbeaver_bookmarks/src/feature/connections/application/configuration_manager.dart';
+import 'package:dbeaver_bookmarks/src/feature/connections/data/connection_configuration_repository.dart';
+import 'package:dbeaver_bookmarks/src/feature/connections/presentation/new_configuration_dialog.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../domain/connection_configuration.dart';
-import '../domain/project.dart';
 import 'editor.dart';
 
 class ConnectionsPage extends HookConsumerWidget {
@@ -69,11 +69,11 @@ class _CommandBar extends HookConsumerWidget {
       primaryItems: [
         CommandBarButton(
           icon: Icon(FluentIcons.add),
-          label: Text('New Project'),
+          label: Text('New Configuration'),
           onPressed: () async {
             await showDialog(
               context: context,
-              builder: (context) => NewProjectDialog(),
+              builder: (context) => NewConfigurationDialog(),
             );
           },
         ),
@@ -92,6 +92,7 @@ class _Workspace extends StatelessWidget {
       children: [
         SizedBox(
           width: 200,
+          height: double.infinity,
           child: _WorkspaceTree(),
         ),
         Expanded(
@@ -107,43 +108,67 @@ class _WorkspaceTree extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var projects = ref.watch(projectsManagerProvider);
+    var configurations = ref.watch(configurationsByProjectProvider);
 
-    return TreeView(
+    return ContextMenu(
       items: [
-        ...projects.map((project) => _buildTreeViewItem(project, ref)),
+        ContextMenuItem(
+          title: 'New Configuration',
+          icon: FluentIcons.add,
+          onPressed: () async {
+            await showDialog(
+              context: context,
+              builder: (context) => NewConfigurationDialog(),
+            );
+          },
+        ),
       ],
-      onItemInvoked: (item, _) {
-        if (item.value is ConnectionConfiguration) {
-          ref
-              .read(currentConnectionConfigurationProvider.notifier)
-              .change(item.value);
-        }
-        return Future.value();
-      },
+      child: TreeView(
+        items: [
+          ...configurations.entries.map((c) => _buildTreeViewItem(
+                c.key,
+                c.value,
+                context,
+                ref,
+              )),
+        ],
+        onItemInvoked: (item, _) {
+          if (item.value is ConnectionConfiguration) {
+            ref
+                .read(currentConnectionConfigurationProvider.notifier)
+                .change(item.value);
+          }
+          return Future.value();
+        },
+      ),
     );
   }
 
-  TreeViewItem _buildTreeViewItem(Project project, WidgetRef ref) {
+  TreeViewItem _buildTreeViewItem(
+    String projectName,
+    List<ConnectionConfiguration> configurations,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     return TreeViewItem(
-      value: project,
-      content: ContextMenu(
-        items: [
-          ContextMenuItem(
-            title: 'Delete',
-            icon: FluentIcons.delete,
-            onPressed: () => ref
-                .read(projectsManagerProvider.notifier)
-                .removeProject(project.id),
-          ),
-        ],
-        child: Text(project.name),
-      ),
+      value: projectName,
+      content: Text(projectName),
       children: [
-        ...project.configurations.map(
+        ...configurations.map(
           (configuration) => TreeViewItem(
             value: configuration,
-            content: Text(configuration.name),
+            content: ContextMenu(
+              items: [
+                ContextMenuItem(
+                  title: 'Delete',
+                  icon: FluentIcons.delete,
+                  onPressed: () => ref
+                      .read(configurationManagerProvider.notifier)
+                      .removeConfiguration(configuration.id),
+                ),
+              ],
+              child: Text(configuration.name),
+            ),
           ),
         ),
       ],
