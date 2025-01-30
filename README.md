@@ -23,6 +23,7 @@ Führe `flutter pub run build_runner build` aus, um die generierten Dateien zu e
 
 ### Expand feature
 
+- [ ] remember dbeaver workspace
 - [ ] Add templates for predefined variable-set usable in connections
 - [ ] Add templates for list of same variable-set with different values. (results in multiple connections during dbeaver json generation)
 - [ ] Add json-file as source for a template (single / multiple sets)
@@ -30,3 +31,4 @@ Führe `flutter pub run build_runner build` aus, um die generierten Dateien zu e
 - [ ] Export & Import / Backup & Restore of whole workspace
 - [ ] Export & Import of single project / connection configuration (missing template?)
 - [ ] Export & Import of single template
+- [ ] make it pretty

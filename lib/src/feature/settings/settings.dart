@@ -32,11 +32,11 @@ class _Workspace extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var currentPath = ref.watch(dBeaverWorkspaceDirectoryProvider).path;
+    var currentPath = ref.watch(dBeaverWorkspaceDirectoryProvider)?.path;
     return _SettingsTile(
       title: 'Arbeitsbereich',
       children: [
-        Text(currentPath),
+        Text(currentPath ?? 'Kein Arbeitsbereich ausgewählt'),
         Padding(
           padding: const EdgeInsetsDirectional.symmetric(vertical: 16.0),
           child: Button(
@@ -55,7 +55,7 @@ class _Workspace extends ConsumerWidget {
     );
   }
 
-  FutureOr<Uri?> showOpenPanel(String currentPath) async {
+  FutureOr<Uri?> showOpenPanel(String? currentPath) async {
     final selectedDirectory = await FilePicker.platform.getDirectoryPath(
       initialDirectory: currentPath,
       lockParentWindow: true,

@@ -23,12 +23,8 @@ class WorkspaceDirectory extends _$WorkspaceDirectory {
 @Riverpod(keepAlive: true)
 class DBeaverWorkspaceDirectory extends _$DBeaverWorkspaceDirectory {
   @override
-  Directory build() {
-    var uri = Uri.directory(
-      '',
-      windows: true,
-    );
-    return Directory.fromUri(uri);
+  Directory? build() {
+    return null;
   }
 
   void change(Uri path) {

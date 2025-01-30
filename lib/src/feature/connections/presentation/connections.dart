@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:dbeaver_bookmarks/src/common/context_menu.dart';
+import 'package:dbeaver_bookmarks/src/common/provider/workspace_directory.dart';
 import 'package:dbeaver_bookmarks/src/feature/connections/application/projects_manager.dart';
 import 'package:dbeaver_bookmarks/src/feature/connections/presentation/new_project_dialog.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../data/workspace_repository.dart';
 import '../domain/connection_configuration.dart';
 import '../domain/project.dart';
 import 'editor.dart';
@@ -16,6 +16,13 @@ class ConnectionsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var dbeaverSelected = ref
+        .watch(dBeaverWorkspaceDirectoryProvider.select((dir) => dir != null));
+    if (!dbeaverSelected) {
+      return const Center(
+        child: Text('Please select a DBeaver workspace directory.'),
+      );
+    }
     return const Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -33,8 +40,8 @@ class _ConfigFileBreadcrumbBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var workspace = ref.watch(workspaceProvider);
-    var path = workspace.directory.path;
+    var workspace = ref.watch(dBeaverWorkspaceDirectoryProvider)!;
+    var path = workspace.path;
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
