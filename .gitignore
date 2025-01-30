@@ -44,4 +44,5 @@ app.*.map.json
 
 # Generated
 *.g.dart
+*.freezed.dart
 /pubspec.lock

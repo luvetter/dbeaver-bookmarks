@@ -1,11 +1,17 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'connection.dart';
 
-class ConnectionConfiguration {
-  final String name;
-  final List<Connection> connections;
+part 'connection_configuration.freezed.dart';
+part 'connection_configuration.g.dart';
 
-  ConnectionConfiguration({
-    required this.name,
-    this.connections = const [],
-  });
+@freezed
+class ConnectionConfiguration with _$ConnectionConfiguration {
+  factory ConnectionConfiguration({
+    required String name,
+    @Default([]) List<Connection> connections,
+  }) = _ConnectionConfiguration;
+
+  factory ConnectionConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$ConnectionConfigurationFromJson(json);
 }

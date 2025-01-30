@@ -1,6 +1,8 @@
 import 'dart:io';
 
-import 'package:dbeaver_bookmarks/src/feature/connections/data/project_repository.dart';
+import 'package:dbeaver_bookmarks/src/common/context_menu.dart';
+import 'package:dbeaver_bookmarks/src/feature/connections/application/projects_manager.dart';
+import 'package:dbeaver_bookmarks/src/feature/connections/presentation/new_project_dialog.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -19,6 +21,7 @@ class ConnectionsPage extends HookConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         _ConfigFileBreadcrumbBar(),
+        _CommandBar(),
         Expanded(child: _Workspace()),
       ],
     );
@@ -49,6 +52,29 @@ class _ConfigFileBreadcrumbBar extends ConsumerWidget {
   }
 }
 
+class _CommandBar extends HookConsumerWidget {
+  const _CommandBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return CommandBar(
+      overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
+      primaryItems: [
+        CommandBarButton(
+          icon: Icon(FluentIcons.add),
+          label: Text('New Project'),
+          onPressed: () async {
+            await showDialog(
+              context: context,
+              builder: (context) => NewProjectDialog(),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
 class _Workspace extends StatelessWidget {
   const _Workspace();
 
@@ -74,11 +100,11 @@ class _WorkspaceTree extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var projects = ref.watch(projectsProvider);
+    var projects = ref.watch(projectsManagerProvider);
 
     return TreeView(
       items: [
-        ...projects.map(_buildTreeViewItem),
+        ...projects.map((project) => _buildTreeViewItem(project, ref)),
       ],
       onItemInvoked: (item, _) {
         if (item.value is ConnectionConfiguration) {
@@ -91,10 +117,21 @@ class _WorkspaceTree extends ConsumerWidget {
     );
   }
 
-  TreeViewItem _buildTreeViewItem(Project project) {
+  TreeViewItem _buildTreeViewItem(Project project, WidgetRef ref) {
     return TreeViewItem(
       value: project,
-      content: Text(project.name),
+      content: ContextMenu(
+        items: [
+          ContextMenuItem(
+            title: 'Delete',
+            icon: FluentIcons.delete,
+            onPressed: () => ref
+                .read(projectsManagerProvider.notifier)
+                .removeProject(project.id),
+          ),
+        ],
+        child: Text(project.name),
+      ),
       children: [
         ...project.configurations.map(
           (configuration) => TreeViewItem(

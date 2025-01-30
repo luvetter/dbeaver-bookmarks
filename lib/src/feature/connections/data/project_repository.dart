@@ -1,5 +1,7 @@
+import 'package:dbeaver_bookmarks/src/common/storage/json_storage.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../domain/connection.dart';
 import '../domain/connection_configuration.dart';
@@ -9,20 +11,27 @@ part 'project_repository.g.dart';
 
 @riverpod
 ProjectRepository projectRepository(Ref ref) {
-  return ProjectRepository();
-}
-
-@riverpod
-List<Project> projects(Ref ref) {
-  return ref.watch(projectRepositoryProvider).getProjects();
+  return ProjectRepository(ref.watch(jsonStorageProvider('projects')));
 }
 
 class ProjectRepository {
-  ProjectRepository();
+  final JsonStorage _jsonStorage;
+
+  ProjectRepository(this._jsonStorage);
+
+  void save(Project project) {
+    _jsonStorage.write(project.id, project);
+  }
+
+  void remove(String id) {
+    _jsonStorage.remove(id);
+  }
 
   List<Project> getProjects() {
     return [
+      ..._jsonStorage.readAll((json) => Project.fromJson(json)),
       Project(
+        id: Uuid().v4(),
         name: 'Project 1',
         configurations: [
           ConnectionConfiguration(
@@ -42,6 +51,7 @@ class ProjectRepository {
         ],
       ),
       Project(
+        id: Uuid().v4(),
         name: 'Project 2',
         configurations: [
           ConnectionConfiguration(
@@ -61,6 +71,7 @@ class ProjectRepository {
         ],
       ),
       Project(
+        id: Uuid().v4(),
         name: 'Project 3',
         configurations: [
           ConnectionConfiguration(
@@ -82,56 +93,3 @@ class ProjectRepository {
     ];
   }
 }
-
-// Project _createProject(Directory directory) {
-//   var dbBeaverDir = _findDbeaverDir(directory);
-//   return Project(directory, [
-//     ...?dbBeaverDir
-//         ?.listSync()
-//         .where(_isFile)
-//         .cast<File>()
-//         .where(not(_isDefaultProjectFile))
-//         .where(_isJson)
-//         .map(ConfigFile.new),
-//   ]);
-// }
-//
-// List<Directory> _findProjectDirs(Directory directory) {
-//   return directory
-//       .listSync()
-//       .where(_isDirectory)
-//       .cast<Directory>()
-//       .where(_isProjectDir)
-//       .toList();
-// }
-//
-// Directory? _findDbeaverDir(Directory directory) {
-//   return directory.listSync().firstWhereOrNull(_isDbeaverDir) as Directory?;
-// }
-//
-// bool _isProjectDir(Directory directory) {
-//   return directory.listSync().any(_isDbeaverDir);
-// }
-//
-// bool _isDbeaverDir(FileSystemEntity directory) {
-//   return _isDirectory(directory) && directory.path.endsWith('.dbeaver');
-// }
-//
-// bool _isDirectory(FileSystemEntity entity) {
-//   return FileSystemEntity.typeSync(entity.path) ==
-//       FileSystemEntityType.directory;
-// }
-//
-// bool _isFile(FileSystemEntity entity) {
-//   return FileSystemEntity.typeSync(entity.path) == FileSystemEntityType.file;
-// }
-//
-// bool _isJson(File entity) {
-//   return entity.path.endsWith('.json');
-// }
-//
-// bool _isDefaultProjectFile(File entity) {
-//   return _wellKnownProjectFiles.contains(
-//     entity.path.split(Platform.pathSeparator).last,
-//   );
-// }

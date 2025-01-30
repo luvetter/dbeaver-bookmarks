@@ -34,7 +34,9 @@ void main() async {
     });
   }
 
-  runApp(const ProviderScope(
-    child: DbeaverBookmarks(),
-  ));
+  runApp(
+    const ProviderScope(
+      child: DbeaverBookmarks(),
+    ),
+  );
 }

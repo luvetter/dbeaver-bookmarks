@@ -32,7 +32,7 @@ class _Workspace extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var currentPath = ref.watch(workspaceDirectoryProvider).path;
+    var currentPath = ref.watch(dBeaverWorkspaceDirectoryProvider).path;
     return _SettingsTile(
       title: 'Arbeitsbereich',
       children: [
@@ -43,7 +43,9 @@ class _Workspace extends ConsumerWidget {
             onPressed: () async {
               final path = await showOpenPanel(currentPath);
               if (path != null) {
-                ref.read(workspaceDirectoryProvider.notifier).change(path);
+                ref
+                    .read(dBeaverWorkspaceDirectoryProvider.notifier)
+                    .change(path);
               }
             },
             child: const Text('Ändern'),
