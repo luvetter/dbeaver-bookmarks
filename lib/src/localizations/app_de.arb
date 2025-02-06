@@ -1,0 +1,90 @@
+{
+  "settings": "Einstellungen",
+  "@settings": {
+    "description": "Settings title"
+  },
+  "workspace": "Arbeitsbereich",
+  "@workspace": {
+    "description": "Workspace title"
+  },
+  "selectWorkspace": "Arbeitsbereich auswählen",
+  "@selectWorkspace": {
+    "description": "Select workspace"
+  },
+  "noWorkspaceSelected": "Kein Arbeitsbereich ausgewählt",
+  "@noWorkspaceSelected": {
+    "description": "No workspace selected"
+  },
+  "changeCommand": "Ändern",
+  "@changeCommand": {
+    "description": "Simple the Word 'Change', usually used for buttons oder actions"
+  },
+  "deleteCommand": "Löschen",
+  "@deleteCommand": {
+    "description": "Simple the Word 'Delete', usually used for buttons oder actions"
+  },
+  "createCommand": "Erstellen",
+  "@createCommand": {
+    "description": "Simple the Word 'Create', usually used for buttons oder actions"
+  },
+  "cancelCommand": "Abbrechen",
+  "@cancelCommand": {
+    "description": "Simple the Word 'Cancel', usually used for buttons oder actions"
+  },
+  "themeModeTitle": "App-Design",
+  "@themeModeTitle": {
+    "description": "App design / theme mode"
+  },
+  "themeMode": "{mode , select, light {Hell} dark {Dunkel} system {System} other {}}",
+  "@themeMode": {
+    "description": "The display name for the theme mode",
+    "placeholders": {
+      "mode": {}
+    }
+  },
+  "connections": "Verbindungen",
+  "@connections": {
+    "description": "Connections title"
+  },
+  "configuration": "Konfiguration",
+  "@configuration": {
+    "description": "Configuration title"
+  },
+  "addConfigurationAction": "Konfiguration hinzufügen",
+  "@addConfigurationAction": {
+    "description": "Add configuration"
+  },
+  "newConfigurationTitle": "Neue Konfiguration",
+  "@newConfigurationTitle": {
+    "description": "New configuration"
+  },
+  "noConfigurationSelected": "Keine Konfiguration ausgewählt",
+  "@noConfigurationSelected": {
+    "description": "No configuration selected"
+  },
+  "configurationAlreadyExists": "Konfiguration '{name}' existiert für Projekt '{project}' bereits",
+  "@configurationAlreadyExists": {
+    "description": "Error message when a configuration already exists",
+    "placeholders": {
+      "name": {},
+      "project": {}
+    }
+  },
+  "objectName": "{object}name",
+  "@objectName": {
+    "description": "A text of pattern '{object}name'"
+  },
+  "project": "Projekt",
+  "enterObjectName": "Geben Sie einen {object}namen ein",
+  "@enterObjectName": {
+    "description": "A text of pattern 'Please enter a {object}name'"
+  },
+  "locale": "Sprache",
+  "@locale": {
+    "description": "Language title"
+  },
+  "currentLocale": "Deutsch",
+  "@currentLocale": {
+    "description": "Display name of the current language"
+  }
+}

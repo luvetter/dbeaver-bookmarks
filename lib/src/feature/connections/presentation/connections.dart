@@ -5,6 +5,7 @@ import 'package:dbeaver_bookmarks/src/common/provider/workspace_directory.dart';
 import 'package:dbeaver_bookmarks/src/feature/connections/application/configuration_manager.dart';
 import 'package:dbeaver_bookmarks/src/feature/connections/data/connection_configuration_repository.dart';
 import 'package:dbeaver_bookmarks/src/feature/connections/presentation/new_configuration_dialog.dart';
+import 'package:dbeaver_bookmarks/src/localizations/app_localizations_extension.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -69,7 +70,7 @@ class _CommandBar extends HookConsumerWidget {
       primaryItems: [
         CommandBarButton(
           icon: Icon(FluentIcons.add),
-          label: Text('New Configuration'),
+          label: Text(context.loc.addConfigurationAction),
           onPressed: () async {
             await showDialog(
               context: context,
@@ -113,7 +114,7 @@ class _WorkspaceTree extends ConsumerWidget {
     return ContextMenu(
       items: [
         ContextMenuItem(
-          title: 'New Configuration',
+          title: context.loc.addConfigurationAction,
           icon: FluentIcons.add,
           onPressed: () async {
             await showDialog(
@@ -160,7 +161,7 @@ class _WorkspaceTree extends ConsumerWidget {
             content: ContextMenu(
               items: [
                 ContextMenuItem(
-                  title: 'Delete',
+                  title: context.loc.deleteCommand,
                   icon: FluentIcons.delete,
                   onPressed: () => ref
                       .read(configurationManagerProvider.notifier)

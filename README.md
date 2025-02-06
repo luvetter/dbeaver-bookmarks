@@ -13,7 +13,7 @@ Führe `flutter pub run build_runner build` aus, um die generierten Dateien zu e
 - [x] Basic UI
 - [x] Add persistence for projects
 - [x] drop projects as unique objects; use a string property on connection configuration
-- [ ] Add localisation
+- [x] Add localization
 - [ ] Add single connection configuration to project
 - [ ] Add multiple connection configuration to project
 - [ ] Add single connection to connection configuration
@@ -25,7 +25,7 @@ Führe `flutter pub run build_runner build` aus, um die generierten Dateien zu e
 
 ### Expand feature
 
-- [ ] remember dbeaver workspace
+- [ ] remember dbeaver workspace / general settings persistence
 - [ ] Add templates for predefined variable-set usable in connections
 - [ ] Add templates for list of same variable-set with different values. (results in multiple connections during dbeaver json generation)
 - [ ] Add json-file as source for a template (single / multiple sets)

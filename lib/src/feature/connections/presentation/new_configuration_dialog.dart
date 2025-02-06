@@ -1,6 +1,8 @@
 import 'package:dbeaver_bookmarks/src/feature/connections/application/configuration_manager.dart';
 import 'package:dbeaver_bookmarks/src/feature/connections/data/connection_configuration_repository.dart';
 import 'package:dbeaver_bookmarks/src/feature/connections/domain/connection_configuration.dart';
+import 'package:dbeaver_bookmarks/src/localizations/app_localizations.dart';
+import 'package:dbeaver_bookmarks/src/localizations/app_localizations_extension.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -17,26 +19,19 @@ class _NewConfigurationDialogState
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _projectController = TextEditingController();
-  late _NameValidator _nameValidator;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameValidator = _NameValidator(ref.read(configurationsByProjectProvider));
-  }
 
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      title: Text('New Configuration'),
+      title: Text(context.loc.newConfigurationTitle),
       actions: [
         Button(
           onPressed: () => _create(),
-          child: Text('Create'),
+          child: Text(context.loc.createCommand),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('Cancel'),
+          child: Text(context.loc.cancelCommand),
         ),
       ],
       content: Form(
@@ -44,33 +39,21 @@ class _NewConfigurationDialogState
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            InfoLabel(
-              label: 'Project name',
-              child: TextFormBox(
-                maxLines: 1,
-                controller: _projectController,
-                autovalidateMode: AutovalidateMode.always,
-                onFieldSubmitted: (_) => _create(),
-                validator: (value) {
-                  if (value.isNullOrEmpty) {
-                    return 'Please enter a project name';
-                  }
-                  return null;
-                },
-              ),
+            _LabeledTextBox(
+              objectName: context.loc.project,
+              controller: _projectController,
+              onFieldSubmitted: (_) => _create(),
             ),
-            InfoLabel(
-              label: 'Configuration name',
-              child: TextFormBox(
-                maxLines: 1,
-                controller: _nameController,
-                autovalidateMode: AutovalidateMode.always,
-                onFieldSubmitted: (_) => _create(),
-                validator: (value) => _nameValidator.validate(
-                  value,
-                  _projectController.text,
+            _LabeledTextBox(
+              objectName: context.loc.configuration,
+              controller: _nameController,
+              onFieldSubmitted: (_) => _create(),
+              validators: [
+                _NameValidator(
+                  ref.watch(configurationsByProjectProvider),
+                  _projectController,
                 ),
-              ),
+              ],
             ),
           ],
         ),
@@ -89,23 +72,89 @@ class _NewConfigurationDialogState
   }
 }
 
-class _NameValidator {
-  final Map<String, List<ConnectionConfiguration>> _existingConfigs;
+extension _NullOrEmpty on String? {
+  bool get isNullOrEmpty => this == null || this!.isEmpty;
+}
 
-  _NameValidator(this._existingConfigs);
+class _LabeledTextBox extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String>? onFieldSubmitted;
+  final List<_Validator> validators;
+  final String objectName;
 
-  String? validate(String? name, String? project) {
-    if (name.isNullOrEmpty) {
-      return 'Please enter a configuration name';
-    }
-    if (_existingConfigs.containsKey(project) &&
-        _existingConfigs[project]!.any((conf) => conf.name == name)) {
-      return "Configuration '$name' for '$project' already exists";
+  const _LabeledTextBox({
+    required this.controller,
+    this.onFieldSubmitted,
+    this.validators = const [],
+    required this.objectName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InfoLabel(
+      label: context.loc.objectName(objectName),
+      child: TextFormBox(
+        maxLines: 1,
+        controller: controller,
+        autovalidateMode: AutovalidateMode.always,
+        onFieldSubmitted: onFieldSubmitted,
+        validator: (value) => _AggregateValidator([
+          _NotEmptyValidator(objectName),
+          ...validators,
+        ]).validate(value, context.loc),
+      ),
+    );
+  }
+}
+
+abstract interface class _Validator {
+  String? validate(String? value, AppLocalizations loc);
+}
+
+class _AggregateValidator implements _Validator {
+  final List<_Validator> _validators;
+
+  const _AggregateValidator(this._validators);
+
+  @override
+  String? validate(String? value, AppLocalizations loc) {
+    for (var validator in _validators) {
+      var result = validator.validate(value, loc);
+      if (result != null) {
+        return result;
+      }
     }
     return null;
   }
 }
 
-extension _NullOrEmpty on String? {
-  bool get isNullOrEmpty => this == null || this!.isEmpty;
+class _NotEmptyValidator implements _Validator {
+  final String objectName;
+
+  _NotEmptyValidator(this.objectName);
+
+  @override
+  String? validate(String? value, AppLocalizations loc) {
+    if (value.isNullOrEmpty) {
+      return loc.enterObjectName(objectName);
+    }
+    return null;
+  }
+}
+
+class _NameValidator implements _Validator {
+  final Map<String, List<ConnectionConfiguration>> existingConfigs;
+  final TextEditingController projectController;
+
+  _NameValidator(this.existingConfigs, this.projectController);
+
+  @override
+  String? validate(String? value, AppLocalizations loc) {
+    final String project = projectController.text;
+    if (existingConfigs.containsKey(project) &&
+        existingConfigs[project]!.any((conf) => conf.name == value)) {
+      return loc.configurationAlreadyExists(value!, project);
+    }
+    return null;
+  }
 }

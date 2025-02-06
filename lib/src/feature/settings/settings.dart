@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:dbeaver_bookmarks/src/common/provider/locale.dart';
 import 'package:dbeaver_bookmarks/src/common/provider/theme.dart';
+import 'package:dbeaver_bookmarks/src/localizations/app_localizations.dart';
+import 'package:dbeaver_bookmarks/src/localizations/app_localizations_extension.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,12 +19,44 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     const biggerSpacer = SizedBox(height: 40.0);
     return ScaffoldPage.scrollable(
-      header: const PageHeader(title: Text('Einstellungen')),
+      header: PageHeader(title: Text(context.loc.settings)),
       children: const [
         _AppMode(),
         biggerSpacer,
+        _LocaleTile(),
+        biggerSpacer,
         _Workspace(),
         biggerSpacer,
+      ],
+    );
+  }
+}
+
+class _LocaleTile extends ConsumerWidget {
+  const _LocaleTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var locale = ref.watch(localeProvider);
+    return _SettingsTile(
+      title: context.loc.locale,
+      children: [
+        ComboBox(
+          value: locale,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(localeProvider.notifier).change(value);
+            }
+          },
+          items: [
+            ...AppLocalizations.supportedLocales.map(
+              (locale) => ComboBoxItem(
+                value: locale,
+                child: Text(lookupAppLocalizations(locale).currentLocale),
+              ),
+            ),
+          ],
+        )
       ],
     );
   }
@@ -34,32 +69,33 @@ class _Workspace extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var currentPath = ref.watch(dBeaverWorkspaceDirectoryProvider)?.path;
     return _SettingsTile(
-      title: 'Arbeitsbereich',
+      title: context.loc.workspace,
       children: [
-        Text(currentPath ?? 'Kein Arbeitsbereich ausgewählt'),
+        Text(currentPath ?? context.loc.noWorkspaceSelected),
         Padding(
           padding: const EdgeInsetsDirectional.symmetric(vertical: 16.0),
           child: Button(
             onPressed: () async {
-              final path = await showOpenPanel(currentPath);
+              final path = await showOpenPanel(context, currentPath);
               if (path != null) {
                 ref
                     .read(dBeaverWorkspaceDirectoryProvider.notifier)
                     .change(path);
               }
             },
-            child: const Text('Ändern'),
+            child: Text(context.loc.selectWorkspace),
           ),
         ),
       ],
     );
   }
 
-  FutureOr<Uri?> showOpenPanel(String? currentPath) async {
+  FutureOr<Uri?> showOpenPanel(
+      BuildContext context, String? currentPath) async {
     final selectedDirectory = await FilePicker.platform.getDirectoryPath(
       initialDirectory: currentPath,
       lockParentWindow: true,
-      dialogTitle: 'Arbeitsbereich auswählen',
+      dialogTitle: context.loc.selectWorkspace,
     );
 
     if (selectedDirectory == null) {
@@ -76,7 +112,7 @@ class _AppMode extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
-    return _SettingsTile(title: 'App-Modus', children: [
+    return _SettingsTile(title: context.loc.themeModeTitle, children: [
       ...[ThemeMode.light, ThemeMode.dark, ThemeMode.system].map(
         (mode) => Padding(
           padding: const EdgeInsetsDirectional.only(bottom: 8.0),
@@ -87,7 +123,7 @@ class _AppMode extends ConsumerWidget {
                 ref.read(themeModeProvider.notifier).change(mode);
               }
             },
-            content: Text(mode.name),
+            content: Text(context.loc.themeMode(mode.name)),
           ),
         ),
       ),
@@ -113,12 +149,4 @@ class _SettingsTile extends StatelessWidget {
       ],
     );
   }
-}
-
-extension _ThemeModeExt on ThemeMode {
-  String get name => switch (this) {
-        ThemeMode.light => 'Hell',
-        ThemeMode.dark => 'Dunkel',
-        ThemeMode.system => 'System',
-      };
 }

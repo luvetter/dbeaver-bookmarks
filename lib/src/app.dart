@@ -1,11 +1,13 @@
 import 'dart:developer' as developer;
 
+import 'package:dbeaver_bookmarks/src/localizations/app_localizations.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'common/provider/locale.dart';
 import 'common/provider/theme.dart';
 import 'common/provider/workspace_directory.dart';
 import 'router.dart';
@@ -25,9 +27,12 @@ class DbeaverBookmarks extends HookConsumerWidget {
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
       routeInformationProvider: router.routeInformationProvider,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
       themeMode: ref.watch(themeModeProvider),
       theme: FluentThemeData.light(),
       darkTheme: FluentThemeData.dark(),
+      locale: ref.watch(localeProvider),
     );
   }
 
