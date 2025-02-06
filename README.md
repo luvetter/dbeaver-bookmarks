@@ -14,10 +14,12 @@ Führe `flutter pub run build_runner build` aus, um die generierten Dateien zu e
 - [x] Add persistence for projects
 - [x] drop projects as unique objects; use a string property on connection configuration
 - [x] Add localization
-- [ ] Add single connection configuration to project
-- [ ] Add multiple connection configuration to project
-- [ ] Add single connection to connection configuration
-- [ ] Add multiple connections to connection configuration
+- [x] Add single connection configuration to project
+- [x] Add multiple connection configuration to project
+- [x] Add single connection to connection configuration
+- [x] Add multiple connections to connection configuration
+- [ ] Fill Connection with data
+- [ ] Rework model
 - [ ] generate dbeaver json from connection configuration
 - [ ] add better error handling
 - [ ] add tests

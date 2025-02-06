@@ -15,6 +15,10 @@
   "@noWorkspaceSelected": {
     "description": "No workspace selected"
   },
+  "addObjectCommand": "{object} hinzufügen",
+  "@addObjectCommand": {
+    "description": "Add object"
+  },
   "changeCommand": "Ändern",
   "@changeCommand": {
     "description": "Simple the Word 'Change', usually used for buttons oder actions"
@@ -22,6 +26,10 @@
   "deleteCommand": "Löschen",
   "@deleteCommand": {
     "description": "Simple the Word 'Delete', usually used for buttons oder actions"
+  },
+  "deleteObjectCommand": "{object} löschen",
+  "@deleteObjectCommand": {
+    "description": "Delete object"
   },
   "createCommand": "Erstellen",
   "@createCommand": {
@@ -46,13 +54,17 @@
   "@connections": {
     "description": "Connections title"
   },
+  "connection": "Verbindung",
+  "@connection": {
+    "description": "Connection title"
+  },
+  "newConnectionTitle": "Neue Verbindung",
+  "@newConnectionTitle": {
+    "description": "New connection"
+  },
   "configuration": "Konfiguration",
   "@configuration": {
     "description": "Configuration title"
-  },
-  "addConfigurationAction": "Konfiguration hinzufügen",
-  "@addConfigurationAction": {
-    "description": "Add configuration"
   },
   "newConfigurationTitle": "Neue Konfiguration",
   "@newConfigurationTitle": {

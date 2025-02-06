@@ -1,3 +1,4 @@
+import 'package:dbeaver_bookmarks/src/common/widgets/labeled_text_form_box.dart';
 import 'package:dbeaver_bookmarks/src/feature/connections/application/configuration_manager.dart';
 import 'package:dbeaver_bookmarks/src/feature/connections/data/connection_configuration_repository.dart';
 import 'package:dbeaver_bookmarks/src/feature/connections/domain/connection_configuration.dart';
@@ -39,16 +40,24 @@ class _NewConfigurationDialogState
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _LabeledTextBox(
-              objectName: context.loc.project,
+            LabeledTextFormBox(
+              label: context.loc.objectName(context.loc.project),
               controller: _projectController,
               onFieldSubmitted: (_) => _create(),
+              validators: [
+                NotEmptyValidator(
+                  context.loc.enterObjectName(context.loc.project),
+                ),
+              ],
             ),
-            _LabeledTextBox(
-              objectName: context.loc.configuration,
+            LabeledTextFormBox(
+              label: context.loc.objectName(context.loc.configuration),
               controller: _nameController,
               onFieldSubmitted: (_) => _create(),
               validators: [
+                NotEmptyValidator(
+                  context.loc.enterObjectName(context.loc.configuration),
+                ),
                 _NameValidator(
                   ref.watch(configurationsByProjectProvider),
                   _projectController,
@@ -72,77 +81,7 @@ class _NewConfigurationDialogState
   }
 }
 
-extension _NullOrEmpty on String? {
-  bool get isNullOrEmpty => this == null || this!.isEmpty;
-}
-
-class _LabeledTextBox extends StatelessWidget {
-  final TextEditingController controller;
-  final ValueChanged<String>? onFieldSubmitted;
-  final List<_Validator> validators;
-  final String objectName;
-
-  const _LabeledTextBox({
-    required this.controller,
-    this.onFieldSubmitted,
-    this.validators = const [],
-    required this.objectName,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InfoLabel(
-      label: context.loc.objectName(objectName),
-      child: TextFormBox(
-        maxLines: 1,
-        controller: controller,
-        autovalidateMode: AutovalidateMode.always,
-        onFieldSubmitted: onFieldSubmitted,
-        validator: (value) => _AggregateValidator([
-          _NotEmptyValidator(objectName),
-          ...validators,
-        ]).validate(value, context.loc),
-      ),
-    );
-  }
-}
-
-abstract interface class _Validator {
-  String? validate(String? value, AppLocalizations loc);
-}
-
-class _AggregateValidator implements _Validator {
-  final List<_Validator> _validators;
-
-  const _AggregateValidator(this._validators);
-
-  @override
-  String? validate(String? value, AppLocalizations loc) {
-    for (var validator in _validators) {
-      var result = validator.validate(value, loc);
-      if (result != null) {
-        return result;
-      }
-    }
-    return null;
-  }
-}
-
-class _NotEmptyValidator implements _Validator {
-  final String objectName;
-
-  _NotEmptyValidator(this.objectName);
-
-  @override
-  String? validate(String? value, AppLocalizations loc) {
-    if (value.isNullOrEmpty) {
-      return loc.enterObjectName(objectName);
-    }
-    return null;
-  }
-}
-
-class _NameValidator implements _Validator {
+class _NameValidator implements Validator {
   final Map<String, List<ConnectionConfiguration>> existingConfigs;
   final TextEditingController projectController;
 

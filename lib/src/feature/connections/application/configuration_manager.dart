@@ -3,6 +3,8 @@ import 'package:dbeaver_bookmarks/src/feature/connections/domain/connection_conf
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
+import '../domain/connection.dart';
+
 part 'configuration_manager.g.dart';
 
 @riverpod
@@ -24,6 +26,34 @@ class ConfigurationManager extends _$ConfigurationManager {
 
   void removeConfiguration(String id) {
     ref.read(connectionConfigurationRepositoryProvider).remove(id);
+    ref.invalidate(configurationsProvider);
+  }
+
+  void createConnection(String setId, String name) {
+    var configuration =
+        ref.read(connectionConfigurationRepositoryProvider).findById(setId);
+    configuration = configuration.copyWith(
+      connections: [
+        ...configuration.connections,
+        Connection(
+          id: Uuid().v4(),
+          name: name,
+        )
+      ],
+    );
+    ref.read(connectionConfigurationRepositoryProvider).save(configuration);
+    ref.invalidate(configurationsProvider);
+  }
+
+  void removeConnection(String setId, String id) {
+    var configuration =
+        ref.read(connectionConfigurationRepositoryProvider).findById(setId);
+    configuration = configuration.copyWith(
+      connections: [
+        ...configuration.connections.where((element) => element.id != id),
+      ],
+    );
+    ref.read(connectionConfigurationRepositoryProvider).save(configuration);
     ref.invalidate(configurationsProvider);
   }
 }
