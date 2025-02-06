@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:dbeaver_bookmarks/src/common/provider/locale.dart';
 import 'package:dbeaver_bookmarks/src/common/provider/theme.dart';
+import 'package:dbeaver_bookmarks/src/localizations/app_localizations.dart';
 import 'package:dbeaver_bookmarks/src/localizations/app_localizations_extension.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -21,8 +23,40 @@ class SettingsPage extends StatelessWidget {
       children: const [
         _AppMode(),
         biggerSpacer,
+        _LocaleTile(),
+        biggerSpacer,
         _Workspace(),
         biggerSpacer,
+      ],
+    );
+  }
+}
+
+class _LocaleTile extends ConsumerWidget {
+  const _LocaleTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    var locale = ref.watch(localeProvider);
+    return _SettingsTile(
+      title: context.loc.locale,
+      children: [
+        ComboBox(
+          value: locale,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(localeProvider.notifier).change(value);
+            }
+          },
+          items: [
+            ...AppLocalizations.supportedLocales.map(
+              (locale) => ComboBoxItem(
+                value: locale,
+                child: Text(lookupAppLocalizations(locale).currentLocale),
+              ),
+            ),
+          ],
+        )
       ],
     );
   }

@@ -1,33 +1,33 @@
 {
-  "settings": "Einstellungen",
+  "settings": "Settings",
   "@settings": {
     "description": "Settings title"
   },
-  "workspace": "Arbeitsbereich",
+  "workspace": "Workspace",
   "@workspace": {
     "description": "Workspace title"
   },
-  "selectWorkspace": "Arbeitsbereich auswählen",
+  "selectWorkspace": "Select workspace",
   "@selectWorkspace": {
     "description": "Select workspace"
   },
-  "noWorkspaceSelected": "Kein Arbeitsbereich ausgewählt",
+  "noWorkspaceSelected": "No workspace selected",
   "@noWorkspaceSelected": {
     "description": "No workspace selected"
   },
-  "changeCommand": "Ändern",
+  "changeCommand": "Change",
   "@changeCommand": {
     "description": "Simple the Word 'Change', usually used for buttons oder actions"
   },
-  "deleteCommand": "Löschen",
+  "deleteCommand": "Delete",
   "@deleteCommand": {
     "description": "Simple the Word 'Delete', usually used for buttons oder actions"
   },
-  "createCommand": "Erstellen",
+  "createCommand": "Create",
   "@createCommand": {
     "description": "Simple the Word 'Create', usually used for buttons oder actions"
   },
-  "cancelCommand": "Abbrechen",
+  "cancelCommand": "Cancel",
   "@cancelCommand": {
     "description": "Simple the Word 'Cancel', usually used for buttons oder actions"
   },
@@ -35,34 +35,34 @@
   "@themeModeTitle": {
     "description": "App design / theme mode"
   },
-  "themeMode": "{mode , select, light {Hell} dark {Dunkel} system {System} other {}}",
+  "themeMode": "{mode , select, light {Light} dark {Dark} system {System} other {}}",
   "@themeMode": {
     "description": "The display name for the theme mode",
     "placeholders": {
       "mode": {}
     }
   },
-  "connections": "Verbindungen",
+  "connections": "Connections",
   "@connections": {
     "description": "Connections title"
   },
-  "configuration": "Konfiguration",
+  "configuration": "Configuration",
   "@configuration": {
     "description": "Configuration title"
   },
-  "addConfigurationAction": "Konfiguration hinzufügen",
+  "addConfigurationAction": "Add configuration",
   "@addConfigurationAction": {
     "description": "Add configuration"
   },
-  "newConfigurationTitle": "Neue Konfiguration",
+  "newConfigurationTitle": "New configuration",
   "@newConfigurationTitle": {
     "description": "New configuration"
   },
-  "noConfigurationSelected": "Keine Konfiguration ausgewählt",
+  "noConfigurationSelected": "No configuration selected",
   "@noConfigurationSelected": {
     "description": "No configuration selected"
   },
-  "configurationAlreadyExists": "Konfiguration '{name}' existiert für Projekt '{project}' bereits",
+  "configurationAlreadyExists": "Configuration '{name}' already exists in project '{project}'",
   "@configurationAlreadyExists": {
     "description": "Error message when a configuration already exists",
     "placeholders": {
@@ -70,21 +70,15 @@
       "project": {}
     }
   },
-  "objectName": "{object}name",
+  "objectName": "{object} name",
   "@objectName": {
-    "description": "A text of pattern '{object}name'"
+    "description": "A text of pattern '{object} name'"
   },
   "project": "Projekt",
-  "enterObjectName": "Geben Sie einen {object}namen ein",
+  "enterObjectName": "Please enter a {object} name",
   "@enterObjectName": {
     "description": "A text of pattern 'Please enter a {object}name'"
   },
-  "locale": "Sprache",
-  "@locale": {
-    "description": "Language title"
-  },
-  "currentLocale": "Deutsch",
-  "@currentLocale": {
-    "description": "Display name of the current language"
-  }
+  "locale": "Language",
+  "currentLocale": "English"
 }
