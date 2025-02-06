@@ -1,16 +1,15 @@
-import 'dart:io';
-
 import 'package:dbeaver_bookmarks/src/common/context_menu.dart';
 import 'package:dbeaver_bookmarks/src/common/provider/workspace_directory.dart';
-import 'package:dbeaver_bookmarks/src/feature/connections/application/configuration_manager.dart';
-import 'package:dbeaver_bookmarks/src/feature/connections/data/connection_configuration_repository.dart';
-import 'package:dbeaver_bookmarks/src/feature/connections/presentation/new_configuration_dialog.dart';
 import 'package:dbeaver_bookmarks/src/localizations/app_localizations_extension.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../application/configuration_manager.dart';
+import '../data/connection_configuration_repository.dart';
 import '../domain/connection_configuration.dart';
-import 'editor.dart';
+import 'editor/editor.dart';
+import 'new_configuration_dialog.dart';
+import 'selected_configuration.dart';
 
 class ConnectionsPage extends HookConsumerWidget {
   const ConnectionsPage({super.key});
@@ -28,34 +27,9 @@ class ConnectionsPage extends HookConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _ConfigFileBreadcrumbBar(),
         _CommandBar(),
         Expanded(child: _Workspace()),
       ],
-    );
-  }
-}
-
-class _ConfigFileBreadcrumbBar extends ConsumerWidget {
-  const _ConfigFileBreadcrumbBar();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var workspace = ref.watch(dBeaverWorkspaceDirectoryProvider)!;
-    var path = workspace.path;
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0),
-      child: BreadcrumbBar(
-        items: [
-          ...path.split(Platform.pathSeparator).map(
-                (segment) => BreadcrumbItem(
-                  label: Text(segment),
-                  value: segment,
-                ),
-              ),
-        ],
-      ),
     );
   }
 }
@@ -65,12 +39,16 @@ class _CommandBar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var configuration = ref.watch(selectedConnectionConfigurationProvider);
+
     return CommandBar(
       overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
       primaryItems: [
         CommandBarButton(
           icon: Icon(FluentIcons.add),
-          label: Text(context.loc.addConfigurationAction),
+          label: Text(
+            context.loc.addObjectCommand(context.loc.configuration),
+          ),
           onPressed: () async {
             await showDialog(
               context: context,
@@ -78,6 +56,27 @@ class _CommandBar extends HookConsumerWidget {
             );
           },
         ),
+        if (configuration != null) ...[
+          CommandBarButton(
+            icon: Icon(FluentIcons.delete),
+            label: Text(
+              context.loc.deleteObjectCommand(context.loc.configuration),
+            ),
+            onPressed: () => ref
+                .read(configurationManagerProvider.notifier)
+                .removeConfiguration(configuration.id),
+          ),
+          CommandBarSeparator(),
+          CommandBarButton(
+            icon: Icon(FluentIcons.add_connection),
+            label: Text(
+              context.loc.addObjectCommand(context.loc.connection),
+            ),
+            onPressed: () => ref
+                .read(configurationManagerProvider.notifier)
+                .createConnection(configuration.id, 'test'),
+          ),
+        ]
       ],
     );
   }
@@ -114,7 +113,7 @@ class _WorkspaceTree extends ConsumerWidget {
     return ContextMenu(
       items: [
         ContextMenuItem(
-          title: context.loc.addConfigurationAction,
+          title: context.loc.addObjectCommand(context.loc.configuration),
           icon: FluentIcons.add,
           onPressed: () async {
             await showDialog(
@@ -134,10 +133,12 @@ class _WorkspaceTree extends ConsumerWidget {
               )),
         ],
         onItemInvoked: (item, _) {
+          var notifier =
+              ref.read(selectedConnectionConfigurationProvider.notifier);
           if (item.value is ConnectionConfiguration) {
-            ref
-                .read(currentConnectionConfigurationProvider.notifier)
-                .change(item.value);
+            notifier.change(item.value);
+          } else {
+            notifier.change(null);
           }
           return Future.value();
         },

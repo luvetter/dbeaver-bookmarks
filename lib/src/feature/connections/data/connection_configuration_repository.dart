@@ -18,7 +18,7 @@ ConnectionConfigurationRepository connectionConfigurationRepository(Ref ref) {
 
 @riverpod
 List<ConnectionConfiguration> configurations(Ref ref) {
-  return ref.watch(connectionConfigurationRepositoryProvider).getProjects();
+  return ref.watch(connectionConfigurationRepositoryProvider).findAll();
 }
 
 @riverpod
@@ -39,7 +39,12 @@ class ConnectionConfigurationRepository {
     _jsonStorage.remove(id);
   }
 
-  List<ConnectionConfiguration> getProjects() {
+  ConnectionConfiguration findById(String id) {
+    return _jsonStorage.read(
+        id, (json) => ConnectionConfiguration.fromJson(json));
+  }
+
+  List<ConnectionConfiguration> findAll() {
     return [
       ..._jsonStorage.readAll((json) => ConnectionConfiguration.fromJson(json)),
       ConnectionConfiguration(
