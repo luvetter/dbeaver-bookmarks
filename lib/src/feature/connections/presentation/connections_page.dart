@@ -1,5 +1,6 @@
 import 'package:dbeaver_bookmarks/src/common/context_menu.dart';
 import 'package:dbeaver_bookmarks/src/common/provider/workspace_directory.dart';
+import 'package:dbeaver_bookmarks/src/feature/connections/presentation/new_connection_dialog.dart';
 import 'package:dbeaver_bookmarks/src/localizations/app_localizations_extension.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -72,9 +73,12 @@ class _CommandBar extends HookConsumerWidget {
             label: Text(
               context.loc.addObjectCommand(context.loc.connection),
             ),
-            onPressed: () => ref
-                .read(configurationManagerProvider.notifier)
-                .createConnection(configuration.id, 'test'),
+            onPressed: () async {
+              await showDialog(
+                context: context,
+                builder: (context) => NewConnectionDialog(configuration),
+              );
+            },
           ),
         ]
       ],

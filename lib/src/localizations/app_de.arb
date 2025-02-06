@@ -58,6 +58,10 @@
   "@connection": {
     "description": "Connection title"
   },
+  "newConnectionTitle": "Neue Verbindung",
+  "@newConnectionTitle": {
+    "description": "New connection"
+  },
   "configuration": "Konfiguration",
   "@configuration": {
     "description": "Configuration title"

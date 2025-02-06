@@ -24,6 +24,11 @@ class ConfigurationManager extends _$ConfigurationManager {
     ref.invalidate(configurationsProvider);
   }
 
+  void removeConfiguration(String id) {
+    ref.read(connectionConfigurationRepositoryProvider).remove(id);
+    ref.invalidate(configurationsProvider);
+  }
+
   void createConnection(String setId, String name) {
     var configuration =
         ref.read(connectionConfigurationRepositoryProvider).findById(setId);
@@ -40,8 +45,15 @@ class ConfigurationManager extends _$ConfigurationManager {
     ref.invalidate(configurationsProvider);
   }
 
-  void removeConfiguration(String id) {
-    ref.read(connectionConfigurationRepositoryProvider).remove(id);
+  void removeConnection(String setId, String id) {
+    var configuration =
+        ref.read(connectionConfigurationRepositoryProvider).findById(setId);
+    configuration = configuration.copyWith(
+      connections: [
+        ...configuration.connections.where((element) => element.id != id),
+      ],
+    );
+    ref.read(connectionConfigurationRepositoryProvider).save(configuration);
     ref.invalidate(configurationsProvider);
   }
 }
