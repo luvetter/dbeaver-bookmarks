@@ -1,4 +1,5 @@
 import 'package:dbeaver_bookmarks/src/common/provider/workspace_directory.dart';
+import 'package:dbeaver_bookmarks/src/localizations/app_localizations_extension.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,7 +50,7 @@ class Shell extends StatelessWidget {
           PaneItem(
             key: Key(const SettingsRoute().location),
             icon: const Icon(FluentIcons.settings),
-            title: const Text('Settings'),
+            title: Text(context.loc.settings),
             body: const SizedBox.shrink(),
             onTap: () => const SettingsRoute().go(context),
           ),
