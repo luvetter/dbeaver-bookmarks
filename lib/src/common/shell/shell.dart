@@ -41,7 +41,7 @@ class Shell extends StatelessWidget {
           PaneItem(
             key: Key(const ConnectionsRoute().location),
             icon: const Icon(FluentIcons.home),
-            title: const Text('Connections'),
+            title: Text(context.loc.connections),
             body: const SizedBox.shrink(),
             onTap: () => const ConnectionsRoute().go(context),
           ),
