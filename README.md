@@ -13,7 +13,7 @@ Führe `flutter pub run build_runner build` aus, um die generierten Dateien zu e
 - [x] Basic UI
 - [x] Add persistence for projects
 - [x] drop projects as unique objects; use a string property on connection configuration
-- [ ] Add localisation
+- [x] Add localisation
 - [ ] Add single connection configuration to project
 - [ ] Add multiple connection configuration to project
 - [ ] Add single connection to connection configuration
