@@ -46,3 +46,4 @@ app.*.map.json
 *.g.dart
 *.freezed.dart
 /pubspec.lock
+/lib/src/localizations/app_localizations*.dart

@@ -1,0 +1,34 @@
+{
+  "settings": "Einstellungen",
+  "@settings": {
+    "description": "Settings title"
+  },
+  "workspace": "Arbeitsbereich",
+  "@workspace": {
+    "description": "Workspace title"
+  },
+  "selectWorkspace": "Arbeitsbereich auswählen",
+  "@selectWorkspace": {
+    "description": "Select workspace"
+  },
+  "noWorkspaceSelected": "Kein Arbeitsbereich ausgewählt",
+  "@noWorkspaceSelected": {
+    "description": "No workspace selected"
+  },
+  "changeCommand": "Ändern",
+  "@change": {
+    "description": "Simple the Word 'Change', usually used for buttons oder actions"
+  },
+  "themeModeTitle": "App-Design",
+  "@themeModeTitle": {
+    "description": "App design / theme mode"
+  },
+  "themeMode": "{mode , select, light {Hell} dark {Dunkel} system {System} other {}}",
+  "@themeMode": {
+    "description": "The display name for the theme mode",
+    "placeholders": {
+      "mode": {
+      }
+    }
+  }
+}
