@@ -52,7 +52,6 @@ class _NewConfigurationDialogState
                 _NameValidator(
                   ref.watch(configurationsByProjectProvider),
                   _projectController,
-                  context.loc,
                 ),
               ],
             ),
@@ -100,16 +99,16 @@ class _LabeledTextBox extends StatelessWidget {
         autovalidateMode: AutovalidateMode.always,
         onFieldSubmitted: onFieldSubmitted,
         validator: (value) => _AggregateValidator([
-          _NotEmptyValidator(context.loc, objectName),
+          _NotEmptyValidator(objectName),
           ...validators,
-        ]).validate(value),
+        ]).validate(value, context.loc),
       ),
     );
   }
 }
 
 abstract interface class _Validator {
-  String? validate(String? value);
+  String? validate(String? value, AppLocalizations loc);
 }
 
 class _AggregateValidator implements _Validator {
@@ -118,9 +117,9 @@ class _AggregateValidator implements _Validator {
   const _AggregateValidator(this._validators);
 
   @override
-  String? validate(String? value) {
+  String? validate(String? value, AppLocalizations loc) {
     for (var validator in _validators) {
-      var result = validator.validate(value);
+      var result = validator.validate(value, loc);
       if (result != null) {
         return result;
       }
@@ -130,13 +129,12 @@ class _AggregateValidator implements _Validator {
 }
 
 class _NotEmptyValidator implements _Validator {
-  final AppLocalizations loc;
   final String objectName;
 
-  _NotEmptyValidator(this.loc, this.objectName);
+  _NotEmptyValidator(this.objectName);
 
   @override
-  String? validate(String? value) {
+  String? validate(String? value, AppLocalizations loc) {
     if (value.isNullOrEmpty) {
       return loc.enterObjectName(objectName);
     }
@@ -147,12 +145,11 @@ class _NotEmptyValidator implements _Validator {
 class _NameValidator implements _Validator {
   final Map<String, List<ConnectionConfiguration>> existingConfigs;
   final TextEditingController projectController;
-  final AppLocalizations loc;
 
-  _NameValidator(this.existingConfigs, this.projectController, this.loc);
+  _NameValidator(this.existingConfigs, this.projectController);
 
   @override
-  String? validate(String? value) {
+  String? validate(String? value, AppLocalizations loc) {
     final String project = projectController.text;
     if (existingConfigs.containsKey(project) &&
         existingConfigs[project]!.any((conf) => conf.name == value)) {
